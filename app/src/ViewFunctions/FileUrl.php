@@ -13,7 +13,7 @@ class FileUrl extends Url
         $path = $this->stripLeadingSlashes($path);
 
         if (is_file($path)) {
-            return $this->escape($path);
+            return 'index.php?download=' . $this->escape($path);
         }
 
         if ($path === '') {
