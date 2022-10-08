@@ -44,15 +44,57 @@
                 let date = this.getDate(line);
                 let size = this.getSize(line);
                 if (anchorElement) {
-                    html.push(`<div class="card m-5 p-5">${anchorElement}<div class="date">${date}</div><div class="size">${size}</div></div>`);
+                    html.push(`<tbody><tr><td class="text-wrap">${anchorElement}</td><td class="date">${date}</td><td class="size">${size}</td></tr></tbody>`);
                 }
 
             })
-            html[0] = `<a class="ml-5 btn" href="../">..</a>`
-            html.unshift('<div class="light-mode">');
-            html.push('</div>');
+            html[0] = `<a class="m-5 btn " href="../">..</a>  <input type="text" class="table-filter form-control" data-table="order-table" placeholder="Item to filter.." />`
+            html.unshift('<table class="table order-table table-striped"><thead><tr><th>Name</th><th>Date</th><th>Size</th></tr></thead>');
+            html.push('</table>');
             nginxList.innerHTML = html.join('');
         }
     };
     nginx.init();
+var TableFilter = (function() {
+ var Arr = Array.prototype;
+        var input;
+  
+        function onInputEvent(e) {
+            input = e.target;
+            var table1 = document.getElementsByClassName(input.getAttribute('data-table'));
+            Arr.forEach.call(table1, function(table) {
+                Arr.forEach.call(table.tBodies, function(tbody) {
+                    Arr.forEach.call(tbody.rows, filter);
+                });
+            });
+        }
+
+        function filter(row) {
+            var text = row.textContent.toLowerCase();
+       //console.log(text);
+      var val = input.value.toLowerCase();
+      //console.log(val);
+            row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+        }
+
+        return {
+            init: function() {
+                var inputs = document.getElementsByClassName('table-filter');
+                Arr.forEach.call(inputs, function(input) {
+                    input.oninput = onInputEvent;
+                });
+            }
+        };
+ 
+    })();
+
+  /*console.log(document.readyState);
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'complete') {
+      console.log(document.readyState);
+            TableFilter.init();
+        }
+    }); */
+  
+ TableFilter.init(); 
 }());
